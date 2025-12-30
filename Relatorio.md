@@ -13,9 +13,9 @@ Ou seja, é um conjunto de calculos das variáveis das juntas e dos conectores a
 
 Existem duas formas principais de calcular as inverse kinematics, uma é a forma analitica e a outra é a forma numérica.
 
-A forma numérica que pode ser usada de várias formas como por exemplo:
+A forma numérica pode ser usada de várias formas, como por exemplo:
 
-- Jacobian transpose;
+- Jacobian ik;
 
 - Cyclic Coordinate Descent (CCD);
 
@@ -23,9 +23,9 @@ A forma numérica que pode ser usada de várias formas como por exemplo:
 
 - Newton-Raphson/Levenberg-Marquardt;
 
-#### Jacobian transpose
+#### Jacobian ik
 
-Usa matrizes jacobianas para calcular o movimento.
+Método que usa matrizes jacobianas para calcular o movimento das juntas e dos conectores. Uma matriz jacobiana é uma matriz que usa a primeira derivada de uma função valor de um vector.
 
 ---
 
@@ -46,3 +46,5 @@ Usa matrizes jacobianas para calcular o movimento.
 [Forward kinematics vs inverse kinematics](https://irisdynamics.com/articles/forward-and-inverse-kinematics)
 
 [What is inverse kinematics](https://www.mathworks.com/discovery/inverse-kinematics.html)
+
+[Jacobian ik](https://medium.com/unity3danimation/overview-of-jacobian-ik-a33939639ab2)
