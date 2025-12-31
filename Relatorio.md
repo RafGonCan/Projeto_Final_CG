@@ -7,7 +7,7 @@
 Inverse kinematics é o estudo do movimento de um objeto sem ter em conta o torque e forças aplicadas ao mesmo.
 Ou seja, é um conjunto de calculos das variáveis das juntas e dos conectores a um ponto final no objeto (PFO). Dando a posição e a orientação do PFO conseguimos calcular as todas as variaveis consoante as juntas e os conectores incluindo posição, rotação e orientação.
 
-![ ](Imagens/InverseKinematics_1.jpg)
+![ ](Imagens_Videos/InverseKinematics_1.jpg)
 
 ### **Como calcular?**
 
@@ -29,7 +29,7 @@ Método que usa matrizes jacobianas para calcular o movimento das juntas e dos c
 
 Ou seja, depois de darmos um "objetivo" para o PFO conseguimos calcular qual será o angulo que a/as juntas têm que fazer para conseguir chegar lá, consequentemente as conexões acompanham as juntas.
 
-![ ](Imagens/Jacobian.jpg)
+![ ](Imagens_Videos/Jacobian.jpg)
 
 ---
 
@@ -75,3 +75,5 @@ Depois não estava a conseguir fazer com que o cotovelo rodasse se quer.
 [Unity ik](https://docs.unity3d.com/es/current/Manual/InverseKinematics.html)
 
 [Jacobian study](https://mtsu.pressbooks.pub/robotics/chapter/chapter-4/)
+
+[Video Jacobian explanation](https://www.youtube.com/watch?v=2_cdDGwnl80)
