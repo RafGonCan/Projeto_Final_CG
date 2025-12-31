@@ -15,7 +15,7 @@ public class JacobianIK : MonoBehaviour
         JacobianWithElbowRotation();
     }
 
-    private void JacobianOneAxis()// só move num eixo
+    private void JacobianOneAxis() // só move num eixo
     {
         // saber os limites das juntas
         Vector3 error = target.position - endEffector.position;
@@ -88,7 +88,7 @@ public class JacobianIK : MonoBehaviour
     {
         Vector3 error = target.position - endEffector.position;
 
-        if (error.magnitude<threshold)
+        if (error.magnitude < threshold)
             return;
 
         for (int i = joints.Length - 1; i >= 0; i--)
@@ -96,30 +96,33 @@ public class JacobianIK : MonoBehaviour
             Transform joint = joints[i];
             Vector3[] rotationAxes;
 
-            if (i == 0)
+            if (i == 0) // Ombro
             {
-                rotationAxes = new Vector3[] {joint.forward, joint.up};
+                rotationAxes = new Vector3[] {Vector3.forward, Vector3.up};
             }
-            else if (i == 1)
+            else if (i == 1) // Cotovelo
             {
-                rotationAxes = new Vector3[] {joint.right, joint.forward};
+                rotationAxes = new Vector3[] {Vector3.right};
             }
             else
             {
-                rotationAxes = new Vector3[] {joint.right};
+                rotationAxes = new Vector3[] {Vector3.right};
             }
-
-            Vector3 toEndEffector = endEffector.position - joint.position;
 
             foreach (Vector3 axis in rotationAxes)
             {
-                Vector3 jacobianCollumn = Vector3.Cross(axis, toEndEffector);
+                // Converter valores locais para globais
+                Vector3 worldAxis = joint.TransformDirection(axis);
+                
+                Vector3 toEndEffector = endEffector.position - joint.position;
+                Vector3 jacobianCollumn = Vector3.Cross(worldAxis, toEndEffector);
+
                 float deltaAngle = Vector3.Dot(jacobianCollumn, error) * step;
 
                 if (Mathf.Abs(deltaAngle) < 0.01f)
                     continue;
 
-                joint.Rotate(axis, deltaAngle, Space.World);
+                joint.Rotate(worldAxis, deltaAngle, Space.World);
             }
         }
     }

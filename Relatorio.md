@@ -31,17 +31,46 @@ Ou seja, depois de darmos um "objetivo" para o PFO conseguimos calcular qual ser
 
 ![ ](Imagens_Videos/Jacobian.jpg)
 
+Alguma matemática. Primeiro temos que calcular a matriz jacobiana para conseguirmos fazer as iterações sobre as juntas.
+
+![Função da Matriz jacobiana](Imagens_Videos/JacobianMatrixFunction.png)
+
+O ***J*** pode ser visto como ***k x n*** em que os valores sao vetores IR^3 ou como ***m x n*** onde os valores são escalares (m = 3k).
+
+A primeira equação para descrever as velocidades do PFO pode ser escrita da seguinte forma, sendo que usamos as primeiras derivadas.
+
+![Dot notation](Imagens_Videos/DotNotation.png)
+
+Depois a começa a iteração sobre estas equações para descobrir uma solução.
+
+Suponhamos que temos o valor dos angulos (θ), do PFO (vector s) e do alvo(t), com isto matriz pode ser computada ***J = J(θ)***. Depois procuramos atualizar o angulo para conseguirmos "modificar" o angulo da junta Δθ:
+
+![Update angles](Imagens_Videos/UpdateAgles.png)
+
+As mudanças ao PFO podem ser vistas na formula seguinte
+
+![End effector changes](Imagens_Videos/EndEffectorChanges.png)
+
+A jacobiana é um calculo muito sensivel a pequenas alterações nos angulos das juntas e isto deixa-nos com dois problemas:
+
+- se o alvo estiver muito distante os braços acabam por esticar para tentar conseguir chegar ao alvo;
+- por outro lado se movermos o alvo muito perto do braço e com alterações pequenas o braço começa a ter "tremeliques", pois está constantemente a tentar chegar ao alvo sem sucesso.
+  
+Este efeito pode ser reduzido com algoritmos DLS e SDLS, mas é dificil de retira-los por completo.
+
+> Depth Limited Search (DLS) é uma variante da Depth first Search (DFP), algoritmo transversal.
+
 ---
 
 ## **Técnicas usadas**
 
-Matriz jacobiana
+Jacobian ik
 
 ---
 
 ## **Técnicas implementadas**
 
-Matriz jacobiana sem restrições
+Jacobian ik
 
 ---
 
@@ -66,9 +95,9 @@ Depois não estava a conseguir fazer com que o cotovelo rodasse se quer.
 
 [Jacobian ik 2.0](https://medium.com/unity3danimation/analytical-jacobian-ik-cb3df86edf00)
 
-[Jacobian ik math](chrome-extension://efaidnbmnnnibpcajpcglclefindmkaj/https://www.cs.cmu.edu/~15464-s13/lectures/lecture6/iksurvey.pdf)
+[Jacobian ik math](https://www.cs.cmu.edu/~15464-s13/lectures/lecture6/iksurvey.pdf)
 
-[Jacobian ik math 2.0](chrome-extension://efaidnbmnnnibpcajpcglclefindmkaj/https://roboticsnakamura.wordpress.com/wp-content/uploads/2020/06/advanced-robotics-y.-nakamura.pdf)
+[Jacobian ik math 2.0](https://roboticsnakamura.wordpress.com/wp-content/uploads/2020/06/advanced-robotics-y.-nakamura.pdf)
 
 [Unity transform](https://docs.unity3d.com/6000.3/Documentation/ScriptReference/Transform.html)
 
@@ -77,3 +106,5 @@ Depois não estava a conseguir fazer com que o cotovelo rodasse se quer.
 [Jacobian study](https://mtsu.pressbooks.pub/robotics/chapter/chapter-4/)
 
 [Video Jacobian explanation](https://www.youtube.com/watch?v=2_cdDGwnl80)
+
+[Waht is DLS](https://www.educative.io/answers/what-is-depth-limited-search)
