@@ -13,12 +13,19 @@ public class JacobianIK : MonoBehaviour
     [SerializeField] private Vector2 shoulderPitchLimits = new Vector2(-60f, 90f);
     [SerializeField] private Vector2 shoulderYawLimits = new Vector2(-90f, 90f);
 
+    [Header("Elbow limits (degrees)")]
+    [SerializeField] private Vector2 elbowLimits = new Vector2(0f, 135.0f);
+
     private Quaternion shoulderInitialAngle;
+    private Quaternion elbowInitialAngle;
 
     private void Start()
     {
         if (joints != null && joints.Length > 0)
             shoulderInitialAngle = joints[0].localRotation;
+
+        if (joints.Length > 1)
+            elbowInitialAngle = joints[1].localRotation;
     }
 
     // Update is called once per frame
@@ -99,7 +106,7 @@ public class JacobianIK : MonoBehaviour
         }
     }
 
-    private void JacobianWithElbowRotation()
+    private void JacobianWithElbowRotation() // roda o cotovelo
     {
         Vector3 error = target.position - endEffector.position;
 
@@ -141,7 +148,7 @@ public class JacobianIK : MonoBehaviour
         }
     }
 
-    private void JacobianWithConstrains()
+    private void JacobianWithConstrains() // jacobian com limites nas juntas
     {
         Vector3 error = target.position - endEffector.position;
 
@@ -158,7 +165,7 @@ public class JacobianIK : MonoBehaviour
         }
     }
 
-    private void ShoulderConstrains(Transform shoulder, Vector3 error)
+    private void ShoulderConstrains(Transform shoulder, Vector3 error) // definir os limites do ombro
     {
         Vector3[] localAxes = { Vector3.forward, Vector3.up };
 
@@ -186,7 +193,7 @@ public class JacobianIK : MonoBehaviour
         }
     }
 
-    private void ElbowConstrains( Transform elbow, Vector3 error)
+    private void ElbowConstrains( Transform elbow, Vector3 error) // definir limites do cotovelo
     {
         Vector3 worldAxis = elbow.TransformDirection(Vector3.right);
         Vector3 toEndEffector = endEffector.position - elbow.position;
@@ -199,9 +206,18 @@ public class JacobianIK : MonoBehaviour
             return;
 
         elbow.Rotate(worldAxis, delta, Space.World);
+
+        Quaternion relative = Quaternion.Inverse(elbowInitialAngle) * elbow.localRotation;
+        
+        Vector3 euler = relative.eulerAngles;
+
+        euler.x = NormalizeAngle(euler.x);
+        euler.x = Mathf.Clamp(euler.x, elbowLimits.x, elbowLimits.y);
+
+        elbow.localRotation = elbowInitialAngle * Quaternion.Euler(euler);
     }
 
-    private void ClampShoulderRotation()
+    private void ClampShoulderRotation() // limitar a rotação do ombro
     {
         Transform shoulder = joints[0];
 
@@ -220,6 +236,7 @@ public class JacobianIK : MonoBehaviour
 
         shoulder.localRotation = shoulderInitialAngle * Quaternion.Euler(euler);
     }
+
     float NormalizeAngle(float angle)
     {
         if (angle > 180f)

@@ -60,6 +60,10 @@ Este efeito pode ser reduzido com algoritmos DLS e SDLS, mas é dificil de retir
 
 > Depth Limited Search (DLS) é uma variante da Depth first Search (DFP), algoritmo transversal.
 
+Agora que já temos uma matriz vamos adicionar alguns limites nas juntas para o nosso braço não rodar para onde não queremos/é suposto.
+
+#### **Cyclic Coordinates Descant**
+
 ---
 
 ## **Técnicas usadas**
@@ -110,3 +114,5 @@ Tive alguns problemas na implementação das constrains nas juntas.
 [Video Jacobian explanation](https://www.youtube.com/watch?v=2_cdDGwnl80)
 
 [Waht is DLS](https://www.educative.io/answers/what-is-depth-limited-search)
+
+[Inverse Kinematics](https://motion.cs.illinois.edu/RoboticSystems/InverseKinematics.html)

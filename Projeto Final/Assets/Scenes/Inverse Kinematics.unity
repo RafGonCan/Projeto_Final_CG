@@ -666,6 +666,7 @@ MonoBehaviour:
   maxIterations: 10
   shoulderPitchLimits: {x: -60, y: 90}
   shoulderYawLimits: {x: -90, y: 90}
+  elbowLimits: {x: 0, y: 135}
 --- !u!4 &1915723550 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -1812909498023395591, guid: 67e13153f94da634d816d8b4a0518122, type: 3}
