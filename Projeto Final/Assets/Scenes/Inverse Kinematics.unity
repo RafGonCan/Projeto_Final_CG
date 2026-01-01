@@ -637,7 +637,7 @@ Transform:
   m_GameObject: {fileID: 1214569651}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.69321096, y: 1.53, z: -0.183}
+  m_LocalPosition: {x: 0.804, y: 1.509, z: 0.06}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -661,8 +661,11 @@ MonoBehaviour:
   - {fileID: 1099369777}
   - {fileID: 1915723550}
   endEffector: {fileID: 92048555}
-  step: 5
+  step: 60
   threshold: 0.1
+  maxIterations: 10
+  shoulderPitchLimits: {x: -60, y: 90}
+  shoulderYawLimits: {x: -90, y: 90}
 --- !u!4 &1915723550 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -1812909498023395591, guid: 67e13153f94da634d816d8b4a0518122, type: 3}

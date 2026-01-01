@@ -83,6 +83,8 @@ Depois o meu target não parava no sitio (erro comum, tinha o target dentro do e
 
 Depois não estava a conseguir fazer com que o cotovelo rodasse se quer.
 
+Tive alguns problemas na implementação das constrains nas juntas.
+
 ---
 
 ## **Bibliografia**
