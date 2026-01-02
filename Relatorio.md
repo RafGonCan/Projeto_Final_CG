@@ -23,6 +23,12 @@ A forma numérica pode ser usada de várias formas, como por exemplo:
 
 - **Newton-Raphson/Levenberg-Marquardt**;
 
+A forma analitica
+
+---
+
+### Formas Numéricas
+
 #### **Jacobian ik**
 
 Método que usa matrizes jacobianas para calcular o movimento das juntas e dos conectores. Uma matriz jacobiana é uma matriz que usa a primeira derivada de uma função valor de um vector.
@@ -62,7 +68,39 @@ Este efeito pode ser reduzido com algoritmos DLS e SDLS, mas é dificil de retir
 
 Agora que já temos uma matriz vamos adicionar alguns limites nas juntas para o nosso braço não rodar para onde não queremos/é suposto.
 
-#### **Cyclic Coordinates Descant**
+#### **Cyclic Coordinates Descent (CCD)**
+
+A ideia por detrás da CCD é, se ***f*** é uma função dimensional de ***k***, então conseguimos minimizar sucessivamente o ***f*** por dimensão individual ciclicamente conseguindo manter o ***f*** nas outras dimensões.
+
+A vantagem deste algoritmo é que pega numa função complexa de ***k*** e reduz para uma função simples e unica de ***k***.
+
+A desvantagem é que pode ser lenta principalmente se o ***f*** não for bem instruido.
+
+Ou seja, CCD resolve o problema através de otimização. Fazendo um loop nas juntas do final até ao inicio mantendo o PFO mais junto possivel do alvo.
+O loop só acaba quando conseguir chegar ao alvo ou quando chegar ao limite de iterações dadas.
+
+![CCD](Imagens_Videos/CCD.jpg)
+
+#### **Forward And Backward Reaching Inverse Kinematics (FABRIK)**
+
+FABRIK é uma solução heuristica para a ik, o que isto quer dizer é que procura uma postura correta aplicando um conjunto de regras para transformar a postura inicial na final.
+
+FABRIK originalmente foi pensado ser rapido e leve para soluções de inverse kinematics aplicadas a computação grafica, mas tem sido usada em muitas mais areas para alem dessa, como por exemplo animações de humanos em tempo real ou gravadas.
+
+Recentemente também tem sido usado na robotica para posições fixas ou moveis com várias juntas.
+
+Uma vantagem desta solução é que precisa de muito pouca informação para além da estrutura da ik, ou seja, comprimento da ligação das juntas, posição relativa da junta, tipo de alcance e os limites da mesma.
+
+Tem uma desvantagem que FABRIK não garante uma solução viável, mas em desenvolvimento de jogos pode fornecer boas soluções na grande maioria dos casos (isto referindo a movimentos de humanos).
+
+> Aristidou et al., 2016; Aristidou & Lasenby, 2011; M. Santos et al., 2021; Tao et al., 2021
+
+A solução de FABRIK funciona no espaço e posição das untas e é aplicado hierarquicamente a cada junta e é iterado até ser encontrada uma solução.\
+Cada movimento feito é através da distancia mais pequena possivel para conseguir reposicionar a junta anterior no braço mantendo os limites do sistema.
+
+---
+
+### Formas analiticas
 
 ---
 
@@ -70,11 +108,13 @@ Agora que já temos uma matriz vamos adicionar alguns limites nas juntas para o 
 
 Jacobian ik
 
+Joint constraints
+
 ---
 
 ## **Técnicas implementadas**
 
-Jacobian ik
+Jacobian ik com constraints
 
 ---
 
@@ -87,7 +127,7 @@ Depois o meu target não parava no sitio (erro comum, tinha o target dentro do e
 
 Depois não estava a conseguir fazer com que o cotovelo rodasse se quer.
 
-Tive alguns problemas na implementação das constrains nas juntas.
+Tive alguns problemas na implementação das constraints.
 
 ---
 
@@ -116,3 +156,9 @@ Tive alguns problemas na implementação das constrains nas juntas.
 [Waht is DLS](https://www.educative.io/answers/what-is-depth-limited-search)
 
 [Inverse Kinematics](https://motion.cs.illinois.edu/RoboticSystems/InverseKinematics.html)
+
+[Coordinate descent](https://bookdown.org/rdpeng/advstatcomp/coordinate-descent.html)
+
+[CCD 2D](https://www.ryanjuckett.com/cyclic-coordinate-descent-in-2d/)
+
+[FABRIK](https://pubs.lib.uiowa.edu/dhm/article/31772/galley/140227/view/)
