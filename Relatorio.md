@@ -4,26 +4,43 @@
 
 ### **O que é inverse kinematics?**
 
+![FK vs IK](Imagens_Videos/FK_vs_IK.gif)
+
 Inverse kinematics é o estudo do movimento de um objeto sem ter em conta o torque e forças aplicadas ao mesmo.
 Ou seja, é um conjunto de calculos das variáveis das juntas e dos conectores a um ponto final no objeto (PFO). Dando a posição e a orientação do PFO conseguimos calcular as todas as variaveis consoante as juntas e os conectores incluindo posição, rotação e orientação.
 
 ![ ](Imagens_Videos/InverseKinematics_1.jpg)
 
+
 ### **Como calcular?**
 
 Existem duas formas principais de calcular as inverse kinematics, uma é a forma analitica e a outra é a forma numérica.
 
-A forma numérica pode ser usada de várias formas, como por exemplo:
+Ambas têm as suas vantagens e desvantagens.
 
-- **Jacobian ik**;
+***Vantagens nas formas numericas:***
 
-- **Cyclic Coordinate Descent (CCD)**;
+- Versatil e geral, consegue lidar com robos/braços que tenham muitas juntas e limites complexos.
+- Implementação é simples;
+- Facil de adicionar vários limites através de otimizações;
 
-- **Forward And Backward Reaching Inverse Kinematics (FABRIK)**;
+***Desvantagens nas formas numericas:***
 
-- **Newton-Raphson/Levenberg-Marquardt**;
+- Lento a encontrar uma solução pois precisa de iterar mais vezes, afetando a performance em tempo real;
+- A qualidade e velocidade da solução dependem muito da configuração das juntas;
+- Pode ser pesado para calcular se tiver um braço extremamente complexo ou se precisar de muita precisão;
 
-A forma analitica
+***Vantagens forma analitica:***
+
+- Computam todas as soluções existindo ou não;
+- Depois de todas as equações serem derivadas torna-se rápido de encontrar as outras soluções;
+- Não é preciso definir parametros;
+
+***Desvantagens forma analitica:***
+
+- Normalmente são dificeis ou "chatas" de derivar;
+- Tem que se derivar para cada robot individualmente;
+- Apenas são aplicadas a robos com um objetivo fixo;
 
 ---
 
@@ -68,6 +85,10 @@ Este efeito pode ser reduzido com algoritmos DLS e SDLS, mas é dificil de retir
 
 Agora que já temos uma matriz vamos adicionar alguns limites nas juntas para o nosso braço não rodar para onde não queremos/é suposto.
 
+**Pole vector** é um desses limites usado em braços com mais do que 1 junta. Isto limita a rotação de uma das juntas num planos, normalmente usado em cotovelos ou joelhos para não dobrarem na direção oposta e o modelo humano não fazer rotações esquisitas ou ficar com joelhos de galinha.
+
+![Pole Vector](Imagens_Videos/Pole_Vector.gif)
+
 #### **Cyclic Coordinates Descent (CCD)**
 
 A ideia por detrás da CCD é, se ***f*** é uma função dimensional de ***k***, então conseguimos minimizar sucessivamente o ***f*** por dimensão individual ciclicamente conseguindo manter o ***f*** nas outras dimensões.
@@ -95,12 +116,17 @@ Tem uma desvantagem que FABRIK não garante uma solução viável, mas em desenv
 
 > Aristidou et al., 2016; Aristidou & Lasenby, 2011; M. Santos et al., 2021; Tao et al., 2021
 
-A solução de FABRIK funciona no espaço e posição das untas e é aplicado hierarquicamente a cada junta e é iterado até ser encontrada uma solução.\
-Cada movimento feito é através da distancia mais pequena possivel para conseguir reposicionar a junta anterior no braço mantendo os limites do sistema.
+A solução de FABRIK funciona no espaço e posição das juntas e é aplicado hierarquicamente a cada junta e é iterado até ser encontrada uma solução.\
+Cada movimento é feito através da distancia mais pequena possivel para conseguir reposicionar a junta anterior no braço mantendo os limites do sistema.
+
+![Fabric](Imagens_Videos/FABRIK.png)
 
 ---
 
-### Formas analiticas
+### Forma analitica
+
+A forma analitica é normalmente usada em sistemas simples e pequenos, pois usa soluções fechadas que fornecem um resultado mais instantaneo. Usa uma abordagem geometrica utilizando trigonometria e vetores para conseguir derivar as juntas.\
+Para obter essas soluções fechadas calcula várias equações e variaveis ao mesmo tempo.
 
 ---
 
@@ -110,11 +136,21 @@ Jacobian ik
 
 Joint constraints
 
+Pole vector
+
 ---
 
 ## **Técnicas implementadas**
 
+Jacobian 1 eixo
+
+Jacobian 2 eixos
+
+Jacobian 2 eixos + rodar o cotovelo
+
 Jacobian ik com constraints
+
+Pole vector
 
 ---
 
@@ -123,11 +159,16 @@ Jacobian ik com constraints
 Antes de começar o projeto, não me organizei bem com o tempo e não fiz uma boa gestão entre djd2 e cg. O que me dificultou bem mais o trabalho, por isso investi mais na investigação.
 
 Quando comecei, tive alguns problemas na atribuição de juntas pois estava a mete-las pela ordem errada e isso fazia com que o código nao funcionasse.
-Depois o meu target não parava no sitio (erro comum, tinha o target dentro do end effector, ou seja quando o end effector mexia o target também logo nunca chegava ao destino marcado).
+Depois o meu target não parava no sitio (erro comum, tinha o target dentro do end effector, ou seja quando o end effector mexia o target também, logo nunca chegava ao destino marcado).
 
 Depois não estava a conseguir fazer com que o cotovelo rodasse se quer.
 
 Tive alguns problemas na implementação das constraints.
+
+Alguns problemas com o pole vector, pois quando o implementei deixei de conseguir mexer o braço para cima. E apesar de perceber a funcionalidade de um pole vector, a sua função prática parecia ir contra a definição então acho que não ficou bem implementado.
+
+Também tive alguns problemas na investigação pois quase todos os estudos levavam para a robotica e não necessariamente para jogos, entao acabei por focar mais nesse ambito.\
+Mais tarde comecei a ficar um bocado confuso com os vários metodos pois pareciam dizer todos a mesma coisa, mas de formas diferentes o que acabou por me causar alguma confusão.
 
 ---
 
@@ -136,6 +177,10 @@ Tive alguns problemas na implementação das constraints.
 [Forward kinematics vs inverse kinematics](https://irisdynamics.com/articles/forward-and-inverse-kinematics)
 
 [What is inverse kinematics](https://www.mathworks.com/discovery/inverse-kinematics.html)
+
+[What is inverse kinematics 2.0](https://fiveable.me/robotics/unit-2/inverse-kinematics-analytical-numerical-methods/study-guide/PrxpB2XwD4YEgi1u)
+
+[Inverse Kinematics](https://motion.cs.illinois.edu/RoboticSystems/InverseKinematics.html)
 
 [Jacobian ik](https://medium.com/unity3danimation/overview-of-jacobian-ik-a33939639ab2)
 
@@ -155,10 +200,10 @@ Tive alguns problemas na implementação das constraints.
 
 [Waht is DLS](https://www.educative.io/answers/what-is-depth-limited-search)
 
-[Inverse Kinematics](https://motion.cs.illinois.edu/RoboticSystems/InverseKinematics.html)
-
 [Coordinate descent](https://bookdown.org/rdpeng/advstatcomp/coordinate-descent.html)
 
 [CCD 2D](https://www.ryanjuckett.com/cyclic-coordinate-descent-in-2d/)
 
 [FABRIK](https://pubs.lib.uiowa.edu/dhm/article/31772/galley/140227/view/)
+
+[Pole VEctor](https://mykolbe.wordpress.com/2020/09/03/rig-fundamentals-polevector/)

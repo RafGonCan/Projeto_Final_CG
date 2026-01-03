@@ -3,9 +3,10 @@ using UnityEngine;
 public class JacobianIK : MonoBehaviour
 {
     [SerializeField] private Transform target;
+    [SerializeField] private Transform poleTarget;
     [SerializeField] private Transform[] joints;
     [SerializeField] private Transform endEffector;
-    [SerializeField] private float step = 60.0f;
+    [SerializeField] private float step = 300f;
     [SerializeField] private float threshold = 0.1f;
     [SerializeField] private int maxIterations = 10;
 
@@ -14,7 +15,7 @@ public class JacobianIK : MonoBehaviour
     [SerializeField] private Vector2 shoulderYawLimits = new Vector2(-90f, 90f);
 
     [Header("Elbow limits (degrees)")]
-    [SerializeField] private Vector2 elbowLimits = new Vector2(0f, 135.0f);
+    [SerializeField] private Vector2 elbowLimits = new Vector2(0f, 135f);
 
     private Quaternion shoulderInitialAngle;
     private Quaternion elbowInitialAngle;
@@ -35,9 +36,12 @@ public class JacobianIK : MonoBehaviour
         {
             JacobianWithConstrains();
         }
+
+        PoleVector();
     }
 
-    private void JacobianOneAxis() // só move num eixo
+    // só move num eixo
+    private void JacobianOneAxis()
     {
         // saber os limites das juntas
         Vector3 error = target.position - endEffector.position;
@@ -70,7 +74,8 @@ public class JacobianIK : MonoBehaviour
         }
     }
 
-    private void Jacobian() //move em 2 eixos mas o cotovelo não gira
+    //move em 2 eixos mas o cotovelo não gira
+    private void Jacobian()
     {
         Vector3 error = target.position - endEffector.position;
 
@@ -106,7 +111,8 @@ public class JacobianIK : MonoBehaviour
         }
     }
 
-    private void JacobianWithElbowRotation() // roda o cotovelo
+    // roda o cotovelo
+    private void JacobianWithElbowRotation() 
     {
         Vector3 error = target.position - endEffector.position;
 
@@ -148,7 +154,8 @@ public class JacobianIK : MonoBehaviour
         }
     }
 
-    private void JacobianWithConstrains() // jacobian com limites nas juntas
+    // jacobian com limites nas juntas
+    private void JacobianWithConstrains()
     {
         Vector3 error = target.position - endEffector.position;
 
@@ -165,7 +172,8 @@ public class JacobianIK : MonoBehaviour
         }
     }
 
-    private void ShoulderConstrains(Transform shoulder, Vector3 error) // definir os limites do ombro
+    // definir os limites do ombro
+    private void ShoulderConstrains(Transform shoulder, Vector3 error)
     {
         Vector3[] localAxes = { Vector3.forward, Vector3.up };
 
@@ -175,9 +183,9 @@ public class JacobianIK : MonoBehaviour
             Vector3 toEndeffector = endEffector.position - shoulder.position;
 
             Vector3 jacobian = Vector3.Cross(worldAxis, toEndeffector);
-            float delta = Vector3.Dot(jacobian, error) * step;
+            float delta = Vector3.Dot(jacobian, error) * step * Time.deltaTime;
 
-            if (Mathf.Abs(delta) < 0.01f)
+            if (Mathf.Abs(delta) < 0.0001f)
                 continue;
 
             Quaternion InitialRotation = shoulder.localRotation;
@@ -193,31 +201,33 @@ public class JacobianIK : MonoBehaviour
         }
     }
 
-    private void ElbowConstrains( Transform elbow, Vector3 error) // definir limites do cotovelo
+    // definir limites do cotovelo
+    private void ElbowConstrains( Transform elbow, Vector3 error)
     {
         Vector3 worldAxis = elbow.TransformDirection(Vector3.right);
         Vector3 toEndEffector = endEffector.position - elbow.position;
 
         Vector3 jacobian = Vector3.Cross(worldAxis, toEndEffector);
 
-        float delta = Vector3.Dot(jacobian, error) * step;
+        float delta = Vector3.Dot(jacobian, error) * step * Time.deltaTime;
 
-        if (Mathf.Abs(delta) < 0.01f)
+        if (Mathf.Abs(delta) < 0.0001f)
             return;
 
-        elbow.Rotate(worldAxis, delta, Space.World);
+        Quaternion InitialRotation = elbow.localRotation;
 
-        Quaternion relative = Quaternion.Inverse(elbowInitialAngle) * elbow.localRotation;
-        
-        Vector3 euler = relative.eulerAngles;
+        elbow.Rotate(Vector3.right, delta, Space.Self);
 
-        euler.x = NormalizeAngle(euler.x);
-        euler.x = Mathf.Clamp(euler.x, elbowLimits.x, elbowLimits.y);
+        ClampElbowRotation();
 
-        elbow.localRotation = elbowInitialAngle * Quaternion.Euler(euler);
+        if (Quaternion.Angle(InitialRotation, elbow.localRotation) < 0.01f)
+        {
+            elbow.localRotation = InitialRotation;
+        }
     }
 
-    private void ClampShoulderRotation() // limitar a rotação do ombro
+    // limitar a rotação do ombro
+    private void ClampShoulderRotation()
     {
         Transform shoulder = joints[0];
 
@@ -229,12 +239,65 @@ public class JacobianIK : MonoBehaviour
         // [0, 360] -> [-180, 180]
         euler.x = NormalizeAngle(euler.x);
         euler.y = NormalizeAngle(euler.y);
+        euler.z = NormalizeAngle(euler.z);
 
         // Limitar eixos
         euler.x = Mathf.Clamp(euler.x, shoulderPitchLimits.x, shoulderPitchLimits.y);
         euler.y = Mathf.Clamp(euler.y, shoulderYawLimits.x, shoulderYawLimits.y);
+        euler.z = 0f;
 
         shoulder.localRotation = shoulderInitialAngle * Quaternion.Euler(euler);
+    }
+
+    // limitar a rotação do cotovelo
+    private void ClampElbowRotation()
+    {
+        Transform elbow = joints[1];
+
+        Quaternion relative = Quaternion.Inverse(elbowInitialAngle) * elbow.localRotation;
+
+        Vector3 euler = relative.eulerAngles;
+
+        euler.x = NormalizeAngle(euler.x);
+
+        euler.x = Mathf.Clamp(euler.x, elbowLimits.x, elbowLimits.y);
+
+        elbow.localRotation = elbowInitialAngle * Quaternion.Euler(euler);
+    }
+
+    // Limitar os eixos do cotovelo
+    private void PoleVector()
+    {
+        if (poleTarget == null || joints.Length < 2)
+            return;
+
+        Transform shoulder = joints[0];
+        Transform elbow = joints[1];
+        Transform hand = endEffector;
+
+        // Vetores do braço
+        Vector3 shoulderToHand = hand.position - shoulder.position;
+        Vector3 shoulderToElbow = elbow.position - shoulder.position;
+        Vector3 shoulderToPole = poleTarget.position - shoulder.position;
+
+        // Verifica se o braço está esticado
+        float armStraight = Vector3.Dot(shoulderToElbow.normalized, (hand.position - elbow.position).normalized);
+
+        if (armStraight > 0.98f)
+            return;
+
+        // Planos das normais
+        Vector3 currentNormal = Vector3.Cross(shoulderToElbow, shoulderToHand).normalized;
+        Vector3 desiredNormal = Vector3.Cross(shoulderToPole, shoulderToHand).normalized;
+
+        if (currentNormal.sqrMagnitude < 0.0001f || desiredNormal.sqrMagnitude < 0.0001f)
+            return;
+
+        Vector3 rotationAxis = shoulderToHand.normalized;
+
+        float angle = Vector3.SignedAngle(currentNormal, desiredNormal, rotationAxis);
+
+        shoulder.Rotate(rotationAxis, angle * 0.2f, Space.World);
     }
 
     float NormalizeAngle(float angle)
@@ -284,7 +347,14 @@ public class JacobianIK : MonoBehaviour
                 Vector3 jacobian = Vector3.Cross(worldAxis, toEnd).normalized;
 
                 Gizmos.color = Color.blue;
-                Gizmos.DrawLine (joint.position, joint.position + jacobian * 0.3f);
+                Gizmos.DrawLine(joint.position, joint.position + jacobian * 0.3f);
+            }
+
+            if (poleTarget != null && joints.Length >= 2)
+            {
+                Gizmos.color = Color.yellow;
+                Gizmos.DrawCube(poleTarget.position, new Vector3 (0.05f, 0.05f, 0.05f));
+                Gizmos.DrawLine(joints[1].position, poleTarget.position);
             }
         }
     }
