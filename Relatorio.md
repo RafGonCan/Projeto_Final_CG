@@ -1,6 +1,13 @@
-# ***Inverse Kinematics***
+# ***Projeto de CG - Inverse Kinematics***
+
+![Planar Ik](Imagens_Videos/Planar_ik.gif)
+## **Autor:**
+
+Rafael Canhoto a22401658
 
 ## **Pesquisa**
+
+Este projeto consiste em criar um sistema de inverse kinematics e aprofundar os meus conhecimentos sobre o mesmo, vou usar o unity para o realizar.
 
 ### **O que é inverse kinematics?**
 
@@ -10,7 +17,6 @@ Inverse kinematics é o estudo do movimento de um objeto sem ter em conta o torq
 Ou seja, é um conjunto de calculos das variáveis das juntas e dos conectores a um ponto final no objeto (PFO). Dando a posição e a orientação do PFO conseguimos calcular as todas as variaveis consoante as juntas e os conectores incluindo posição, rotação e orientação.
 
 ![ ](Imagens_Videos/InverseKinematics_1.jpg)
-
 
 ### **Como calcular?**
 
@@ -154,7 +160,7 @@ Pole vector
 
 ---
 
-## **Problemas/erros que tive durante o trabalho**
+## **Problemas/erros/obstaculos durante o trabalho**
 
 Antes de começar o projeto, não me organizei bem com o tempo e não fiz uma boa gestão entre djd2 e cg. O que me dificultou bem mais o trabalho, por isso investi mais na investigação.
 
@@ -165,10 +171,20 @@ Depois não estava a conseguir fazer com que o cotovelo rodasse se quer.
 
 Tive alguns problemas na implementação das constraints.
 
-Alguns problemas com o pole vector, pois quando o implementei deixei de conseguir mexer o braço para cima. E apesar de perceber a funcionalidade de um pole vector, a sua função prática parecia ir contra a definição então acho que não ficou bem implementado.
+Alguns problemas com o pole vector, pois quando o implementei deixei de conseguir mexer o braço para cima. E apesar de perceber a funcionalidade de um pole vector, a sua função prática parecia ir contra a definição então acho que não ficou bem implementado.\
+(tenho um pequeno video na pasta das imagens a mostrar com o braço mexia antes de aplicar o pole vector.)
 
-Também tive alguns problemas na investigação pois quase todos os estudos levavam para a robotica e não necessariamente para jogos, entao acabei por focar mais nesse ambito.\
+Também tive alguns problemas na investigação pois quase todos os estudos levavam para a robotica e não necessariamente para jogos o que achei estranho visto que grande parte dos jogos usam ik, entao acabei por focar mais nesse ambito.\
 Mais tarde comecei a ficar um bocado confuso com os vários metodos pois pareciam dizer todos a mesma coisa, mas de formas diferentes o que acabou por me causar alguma confusão.
+
+---
+
+## **Conclusão**
+
+Apesar de ter feito uma má gestão do meu tempo, naquele que tive penso que consegui aprender bastante sobre inverse kinematics. Tem muita mais matemática do que estava à espera, todas as formas que encontrei por mais distintas que sejam acabavam por levar todas ao mesmo objetivo. Conseguir mover um objeto/braço/robo com juntas e ligações entre elas. Ambos têm as suas vantagem e desvantagens daí serem usados metodos diferentes consoante o objetivo que se quer alcançar, com que finalidade, precisão e rapidez./
+Nos jogos acaba por ser usado para "mostrar" um bocado mais de realismo (nem sempre pode ser usado para fazer o contrário) e parecer mesmo que o personagem está no mundo onde está inserido.
+
+![InGame](Imagens_Videos/In_Game.gif)
 
 ---
 
@@ -207,3 +223,5 @@ Mais tarde comecei a ficar um bocado confuso com os vários metodos pois parecia
 [FABRIK](https://pubs.lib.uiowa.edu/dhm/article/31772/galley/140227/view/)
 
 [Pole VEctor](https://mykolbe.wordpress.com/2020/09/03/rig-fundamentals-polevector/)
+
+[Video Inverse kinematics](https://www.youtube.com/watch?v=jfKTmEWJESwhttps://www.youtube.com/watch?v=jfKTmEWJESw)
